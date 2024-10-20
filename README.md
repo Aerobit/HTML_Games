@@ -15,7 +15,7 @@ The classic word-guessing game where you must guess the hidden word one letter a
 - **Cheat Mode**: Cheat button (with cooldown) for when you're stuck.
 - **Performance Tracking**: Streak and scoring system to track your progress.
 
-[👉 Play the Hangman Game](./hangman_game.html)
+[👉 Play the Hangman Game](https://aerobit.github.io/HTML_Games/hangman_game.html)
 
 ---
 
@@ -30,7 +30,7 @@ A strategic game for two players where you try to be the first to get three in a
 - **Scorekeeping**: Tracks wins, current streaks, and games played.
 - **Responsive Design**: Optimized for both desktop and mobile browsers.
 
-[👉 Play Tic Tac Toe](./tic_tac_toe.html)
+[👉 Play Tic Tac Toe](https://aerobit.github.io/HTML_Games/tic_tac_toe.html)
 
 ---
 
@@ -47,24 +47,13 @@ Each game will be listed here as soon as it's ready. Stay tuned!
 
 ## 🕹️ How to Play
 
-1. **Clone this repository** to your local machine using the following command:
+1. **Visit our game collection website**:
 
-    ```sh
-    git clone https://github.com/Aerobit/HTML_Games.git
-    ```
+    [👉 HTML_Games Collection](https://aerobit.github.io/HTML_Games/)
 
-2. **Navigate** to the cloned directory:
+2. **Choose a game** from the list and start playing directly in your browser.
 
-    ```sh
-    cd HTML_Games
-    ```
-
-3. **Open the desired game** HTML file in your browser:
-
-    - For Hangman: `hangman_game.html`
-    - For Tic Tac Toe: `tic_tac_toe.html`
-
-4. **Enjoy playing** and share your scores with your friends!
+3. **Enjoy playing** and share your scores with your friends!
 
 ---
 
