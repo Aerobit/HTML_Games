@@ -1,4 +1,4 @@
-# Fun Games Collection
+# HTML Game Collection
 
 Welcome to the **Fun Games Collection**! This repository hosts a growing collection of browser-based games, each one designed for a fun and interactive experience right in your browser. Whether you're looking to pass the time or challenge yourself, these games are perfect for you.
 
