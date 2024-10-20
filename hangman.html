@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            transition: background 0.5s ease;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        #stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        .stat {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        #hangman {
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        #word {
+            font-size: 2rem;
+            letter-spacing: 0.5rem;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+        }
+        #guesses {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #666;
+        }
+        #message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .win {
+            background-color: #4CAF50;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+        .lose {
+            background-color: #f44336;
+            color: white;
+            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        @keyframes dance {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+        #buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .button {
+            font-size: 1rem;
+            padding: 0.7rem 1.5rem;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .button:hover {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        #cheatButton {
+            background-color: #f9a825;
+        }
+        #cheatButton:hover {
+            background-color: #f57f17;
+        }
+        .letter {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .correct {
+            color: #4CAF50;
+            transform: scale(1.2);
+        }
+        .incorrect {
+            color: #f44336;
+            transform: scale(0.8);
+        }
+        .dancing {
+            animation: dance 0.5s infinite;
+        }
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hangman</h1>
+        <div id="stats">
+            <div class="stat" id="score">Score: 0</div>
+            <div class="stat" id="streak">Streak: 0</div>
+            <div class="stat" id="wins">Wins: 0</div>
+            <div class="stat" id="timer">Time Left: 10s</div>
+        </div>
+        <svg id="hangman" width="200" height="250" viewBox="0 0 200 250">
+            <!-- Base -->
+            <line x1="20" y1="230" x2="100" y2="230" stroke="#333" stroke-width="3"/>
+            <!-- Vertical pole -->
+            <line x1="60" y1="20" x2="60" y2="230" stroke="#333" stroke-width="3"/>
+            <!-- Horizontal beam -->
+            <line x1="58" y1="20" x2="140" y2="20" stroke="#333" stroke-width="3"/>
+            <!-- Rope -->
+            <line x1="140" y1="20" x2="140" y2="50" stroke="#333" stroke-width="3"/>
+            <!-- Head -->
+            <circle id="head" cx="140" cy="70" r="20" fill="none" stroke="#333" stroke-width="3" opacity="0"/>
+            <!-- Body -->
+            <line id="body" x1="140" y1="90" x2="140" y2="150" stroke="#333" stroke-width="3" opacity="0"/>
+            <!-- Left arm -->
+            <line id="leftArm" x1="140" y1="120" x2="120" y2="100" stroke="#333" stroke-width="3" opacity="0"/>
+            <!-- Right arm -->
+            <line id="rightArm" x1="140" y1="120" x2="160" y2="100" stroke="#333" stroke-width="3" opacity="0"/>
+            <!-- Left leg -->
+            <line id="leftLeg" x1="140" y1="150" x2="120" y2="180" stroke="#333" stroke-width="3" opacity="0"/>
+            <!-- Right leg -->
+            <line id="rightLeg" x1="140" y1="150" x2="160" y2="180" stroke="#333" stroke-width="3" opacity="0"/>
+        </svg>
+        <div id="word"></div>
+        <div id="guesses">Guesses: </div>
+        <div id="message"></div>
+        <div id="buttons">
+            <button id="newGame" class="button">New Game</button>
+            <button id="cheatButton" class="button">Cheat</button>
+        </div>
+        <div id="notification">Notification</div>
+    </div>
+
+    <script>
+        const words = ['javascript', 'castle', 'ocean', 'mountain', 'python', 'dream', 'galaxy', 'elephant', 'treasure', 'mystery', 'adventure', 'forest', 'village', 'courage', 'butterfly', 'island', 'volcano', 'dinosaur', 'pirate', 'rainbow', 'cat', 'dog', 'house', 'tree', 'car', 'book', 'sun', 'moon', 'star', 'fish', 'bird'];
+
+        // Function to select a random word from the list of words
+        function selectRandomWord() {
+            return words[Math.floor(Math.random() * words.length)];
+        }
+
+        let word = selectRandomWord(); // Use the function to select a random word
+        let guessedLetters = []; // Array to keep track of guessed letters
+        let remainingGuesses = 6; // Number of incorrect guesses allowed
+        let streak = 0; // Track win streaks
+        let gameActive = true; // Boolean to track if the game is active
+        let cheatCooldown = false; // Boolean to track cooldown for cheat button
+        let score = 0; // Track player score
+        let wins = 0; // Track number of wins
+        let timerInterval; // Timer interval ID
+        let timeLeft = 10; // Time for each guess
+
+        const wordEl = document.getElementById('word');
+        const guessesEl = document.getElementById('guesses');
+        const messageEl = document.getElementById('message');
+        const newGameEl = document.getElementById('newGame');
+        const cheatButton = document.getElementById('cheatButton');
+        const notificationEl = document.getElementById('notification');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const hangmanParts = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
+
+        const winMessages = [
+            "You're unstoppable!",
+            "Hangman didn't stand a chance!",
+            "You saved the stickman hero!",
+        ];
+        const loseMessages = [
+            "Oops! Better luck next time.",
+            "The stickman wasn't very lucky today...",
+            "Yikes! Practice makes perfect!"
+        ];
+        const funnyComments = [
+            "Oh no, you really thought that was the right letter?",
+            "Are you even trying?",
+            "That's okay, even a genius makes mistakes... sometimes.",
+            "Nice! Only... um... several more letters to go!"
+        ];
+
+        // Function to update the displayed word with correctly guessed letters
+        function updateWord() {
+            wordEl.innerHTML = word.split('').map(letter => 
+                `<span class="letter ${guessedLetters.includes(letter) ? 'correct' : ''}">${guessedLetters.includes(letter) ? letter : '_'}</span>`
+            ).join('');
+        }
+
+        // Function to update the list of guessed letters
+        function updateGuesses() {
+            guessesEl.innerHTML = 'Guesses: ' + guessedLetters.map(letter => 
+                `<span class="letter ${word.includes(letter) ? 'correct' : 'incorrect'}">${letter}</span>`
+            ).join(', ');
+            updateHangman();
+        }
+
+        // Function to update the hangman drawing based on incorrect guesses
+        function updateHangman() {
+            const incorrectGuesses = guessedLetters.filter(letter => !word.includes(letter)).length;
+            hangmanParts.forEach((part, index) => {
+                document.getElementById(part).style.opacity = index < incorrectGuesses ? 1 : 0;
+            });
+
+            // Update background color based on incorrect guesses
+            document.body.style.background = incorrectGuesses >= 3 ? 'linear-gradient(135deg, #e66465, #9198e5)' : 'linear-gradient(135deg, #667eea, #764ba2)';
+        }
+
+        // Function to check if the player has won or lost the game
+        function checkWin() {
+            if (word.split('').every(letter => guessedLetters.includes(letter))) {
+                endGame(true); // Player wins
+            } else if (remainingGuesses === 0) {
+                endGame(false); // Player loses
+            }
+        }
+
+        // Function to handle the end of the game
+        function endGame(isWin) {
+            gameActive = false; // Set game to inactive
+            clearInterval(timerInterval); // Clear timer interval
+            if (isWin) {
+                streak++; // Increase win streak
+                wins++; // Increase total wins
+                score += 10; // Increase score for a win
+                const randomWinMessage = winMessages[Math.floor(Math.random() * winMessages.length)];
+                messageEl.textContent = `${randomWinMessage} The word was: ${word}`;
+                messageEl.className = 'win';
+                document.getElementById('hangman').classList.add('dancing'); // Add dancing animation on win
+            } else {
+                streak = 0; // Reset streak on loss
+                score = Math.max(0, score - 5); // Deduct score for a loss, but do not go below zero
+                const randomLoseMessage = loseMessages[Math.floor(Math.random() * loseMessages.length)];
+                messageEl.textContent = `${randomLoseMessage} The word was: ${word}`;
+                messageEl.className = 'lose';
+                document.getElementById('hangman').classList.add('shake'); // Add shake animation on loss
+            }
+            scoreEl.textContent = `Score: ${score}`; // Update score display
+            document.getElementById('streak').textContent = `Streak: ${streak}`;
+            document.getElementById('wins').textContent = `Wins: ${wins}`;
+            newGameEl.style.display = 'inline-block'; // Show new game button
+        }
+
+        // Function to reset the game for a new round
+        function resetGame() {
+            clearInterval(timerInterval); // Clear any existing timer
+            word = selectRandomWord(); // Use the function to select a new random word
+            guessedLetters = []; // Reset guessed letters
+            remainingGuesses = 6; // Reset remaining guesses
+            timeLeft = 10; // Reset timer
+            gameActive = true; // Set game to active
+            updateWord(); // Update displayed word
+            updateGuesses(); // Update guessed letters
+            messageEl.textContent = ''; // Clear any endgame messages
+            messageEl.className = ''; // Reset message styling
+            newGameEl.style.display = 'none'; // Hide new game button
+            hangmanParts.forEach(part => {
+                document.getElementById(part).style.opacity = 0; // Hide all hangman parts
+            });
+            document.getElementById('hangman').classList.remove('dancing', 'shake'); // Remove animations
+            startTimer(); // Start new timer
+        }
+
+        // Function to make a guess based on player input
+        function makeGuess(letter) {
+            if (gameActive) {
+                // Ensure valid input
+                if (!/^[a-z]$/.test(letter) || letter.length !== 1) {
+                    showNotification('Invalid input. Please enter a single alphabet letter.');
+                    return;
+                }
+                // Check if the letter has already been guessed
+                if (guessedLetters.includes(letter)) {
+                    showNotification('You have already guessed that letter. Try a different one!');
+                    return;
+                } // Ensure valid input
+                if (!guessedLetters.includes(letter)) { // Check if letter has not been guessed
+                    guessedLetters.push(letter); // Add letter to guessed letters
+                    if (!word.includes(letter)) { // If incorrect, reduce remaining guesses
+                        remainingGuesses--;
+                        const randomComment = funnyComments[Math.floor(Math.random() * funnyComments.length)];
+                        showNotification(randomComment); // Show a funny comment for incorrect guess
+                    }
+                    updateWord(); // Update displayed word
+                    updateGuesses(); // Update guessed letters display
+                    checkWin(); // Check if the player has won or lost
+                    resetTimer(); // Reset the timer after each guess
+                }
+            }
+        }
+
+        // Function to start the countdown timer
+        function startTimer() {
+            timerEl.textContent = `Time Left: ${timeLeft}s`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Time Left: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    remainingGuesses--; // Deduct a guess if time runs out
+                    updateGuesses(); // Update the guesses display
+                    checkWin(); // Check win/loss condition
+                    resetTimer(); // Reset timer for next guess
+                }
+            }, 1000);
+        }
+
+        // Function to reset the countdown timer
+        function resetTimer() {
+            if (!gameActive) return; // Ensure timer does not reset if game is over
+            clearInterval(timerInterval); // Clear existing timer
+            timeLeft = 10; // Reset time left
+            startTimer(); // Start a new timer
+        }
+
+        // Event handler for key press guesses
+        function handleKeyPress(event) {
+            if (gameActive) { // Only handle keypresses if game is active
+                const key = event.key.toLowerCase(); // Get the pressed key
+                if (/^[a-z]$/.test(key) && key.length === 1) { // Ensure it is a valid alphabet letter
+                    makeGuess(key); // Make a guess with the key
+                }
+            }
+        }
+
+        // Function to show temporary notifications for events such as incorrect guesses
+        function showNotification(message) {
+            notificationEl.textContent = message; // Set notification message
+            notificationEl.style.opacity = 1; // Show notification
+            setTimeout(() => {
+                notificationEl.style.opacity = 0; // Hide notification after 3 seconds
+            }, 3000);
+        }
+
+        // Event listener for the cheat button to reveal a correct letter
+        cheatButton.addEventListener('click', function() {
+            if (gameActive && !cheatCooldown) { // Allow cheat if game is active and cooldown is off
+                const hintLetter = word.split('').find(letter => !guessedLetters.includes(letter)); // Find first unguessed letter
+                if (hintLetter) {
+                    makeGuess(hintLetter); // Make a guess with the hint letter
+                    messageEl.textContent = "The Hangman says: Cheating?! I'll let it slide, just this once!"; // Show cheat message
+                }
+                cheatCooldown = true; // Set cheat cooldown
+                setTimeout(() => {
+                    cheatCooldown = false; // Reset cheat cooldown after 5 seconds
+                }, 5000); // 5 second cooldown
+            }
+        });
+
+        // Event listener for the new game button to reset the game
+        newGameEl.addEventListener('click', () => {
+            resetGame(); // Call reset game function
+        });
+
+        // Add event listener for keypresses to handle guesses
+        document.addEventListener('keydown', handleKeyPress);
+
+        // Initialize the game display
+        updateWord(); // Show the initial state of the word
+        updateGuesses(); // Show the initial guesses state
+    </script>
+</body>
+</html>
