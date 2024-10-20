@@ -15,7 +15,7 @@ The classic word-guessing game where you must guess the hidden word one letter a
 - **Cheat Mode**: Cheat button (with cooldown) for when you're stuck.
 - **Performance Tracking**: Streak and scoring system to track your progress.
 
-[👉 Play the Hangman Game](https://aerobit.github.io/HTML_Games/hangman_game.html)
+[👉 Play the Hangman Game](https://aerobit.github.io/HTML_Games/hangman.html)
 
 ---
 
