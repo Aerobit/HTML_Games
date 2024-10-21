@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 8 Ball Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Raleway', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle at center, #000428, #004e92);
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .title {
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+        .eight-ball {
+            width: 300px;
+            height: 300px;
+            background-color: #000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+        .eight-ball:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7);
+        }
+        .eight-ball.shaking {
+            animation: shake 0.6s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        #answer {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .question {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #d3d3d3;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Ask the Magic 8 Ball</div>
+        <div class="eight-ball" onclick="shakeBall()">
+            <p id="answer">?</p>
+        </div>
+        <div class="question">Click the ball to reveal your answer!</div>
+    </div>
+
+    <script>
+        const answers = [
+            "It is certain",
+            "It is decidedly so",
+            "Without a doubt",
+            "Yes, definitely",
+            "You may rely on it",
+            "As I see it, yes",
+            "Most likely",
+            "Outlook good",
+            "Yes",
+            "Signs point to yes",
+            "Reply hazy, try again",
+            "Ask again later",
+            "Better not tell you now",
+            "Cannot predict now",
+            "Concentrate and ask again",
+            "Don't count on it",
+            "My reply is no",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful"
+        ];
+
+        function shakeBall() {
+            const ball = document.querySelector('.eight-ball');
+            const answerElement = document.getElementById('answer');
+            const container = document.querySelector('.container');
+
+            // Shake the ball
+            ball.classList.add('shaking');
+            setTimeout(() => {
+                ball.classList.remove('shaking');
+
+                // Get a random answer
+                const randomIndex = Math.floor(Math.random() * answers.length);
+                const randomAnswer = answers[randomIndex];
+
+                // Display the answer
+                answerElement.textContent = randomAnswer;
+
+                // Change container background color based on the answer
+                if ([
+                    "It is certain", "It is decidedly so", "Without a doubt", "Yes, definitely", "You may rely on it", "As I see it, yes", "Most likely", "Outlook good", "Yes", "Signs point to yes"
+                ].includes(randomAnswer)) {
+                    container.style.backgroundColor = "rgba(100, 200, 100, 0.7)"; // Softer greenish color for positive answers
+                } else if ([
+                    "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"
+                ].includes(randomAnswer)) {
+                    container.style.backgroundColor = "rgba(200, 80, 80, 0.7)"; // Softer reddish color for negative answers
+                } else {
+                    container.style.backgroundColor = "rgba(70, 130, 180, 0.8)"; // Bluish color for uncertain answers
+                }
+            }, 600);
+        }
+    </script>
+</body>
+</html>
