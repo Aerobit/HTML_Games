@@ -34,6 +34,20 @@ A strategic game for two players where you try to be the first to get three in a
 
 ---
 
+### 3. Magic 8 Ball
+
+Ask the Magic 8 Ball your burning questions and get a mystical response! Click the ball to see what the future holds for you.
+
+#### **Features**:
+
+- **Animated Shake Effect**: The ball shakes with a cool animation to reveal an answer.
+- **Color Feedback**: The background color changes to green for positive answers, red for negative, and blue for neutral or uncertain answers.
+- **Stylish Design**: Features a sleek black ball with glowing text for a classic, mysterious look.
+
+[👉 Play the Magic 8 Ball Game](https://aerobit.github.io/HTML_Games/magic_8_ball.html)
+
+---
+
 ## 🚀 Upcoming Games
 
 Our collection is still growing! We have more games in the pipeline, including:
