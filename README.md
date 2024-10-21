@@ -48,11 +48,26 @@ Ask the Magic 8 Ball your burning questions and get a mystical response! Click t
 
 ---
 
+### 4. Memory Match: Cosmic Edition
+
+Test your memory and match pairs of cosmic-themed cards before the timer runs out! With beautiful visuals and a fun space theme, this game will challenge and entertain players of all ages.
+
+#### **Features**:
+
+- **Cosmic Theme**: Features space-themed symbols like stars, rockets, and planets.
+- **Timer Challenge**: Complete the game before the 60-second timer runs out.
+- **Responsive Design**: Works seamlessly on both desktop and mobile devices.
+- **Win/Lose Messages**: Enjoy fun overlay messages for victories or when time runs out.
+- **Stylish Visual Effects**: Includes stardust animations when cards match.
+
+[👉 Play Memory Match: Cosmic Edition](https://aerobit.github.io/HTML_Games/memory_match.html)
+
+---
+
 ## 🚀 Upcoming Games
 
 Our collection is still growing! We have more games in the pipeline, including:
 
-- **Memory Match**: Flip and match pairs of cards while trying to remember their locations.
 - **Snake Game**: Guide the snake to eat food and grow, but avoid hitting the walls or yourself.
 
 Each game will be listed here as soon as it's ready. Stay tuned!
