@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Snake Game</title>
+<style>
+  body {
+    margin: 0;
+    background: #222;
+  }
+  #game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  canvas {
+    background: #111;
+    box-shadow: 0 0 10px #000;
+  }
+  #score {
+    color: #fff;
+    text-align: center;
+    font-size: 32px;
+    margin-top: 10px;
+  }
+  #game-over {
+    color: #fff;
+    text-align: center;
+    font-size: 48px;
+    margin-top: 20px;
+  }
+  #restart-button {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div id="game-container">
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+  <div id="score">Score: 0</div>
+  <div id="game-over" style="display: none;">Game Over</div>
+  <button id="restart-button" style="display: none;" onclick="restartGame()">Restart Game</button>
+</div>
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const gridSize = 30;
+  const tileCount = canvas.width / gridSize;
+  let snake = [{ x: 10, y: 10 }];
+  let velocity = { x: 0, y: 0 };
+  let apple = { x: 5, y: 5 };
+  let score = 0;
+  let gameOver = false;
+  let gameInterval;
+
+  function gameLoop() {
+    if (gameOver) {
+      clearInterval(gameInterval);
+      document.getElementById('game-over').style.display = 'block';
+      document.getElementById('restart-button').style.display = 'block';
+      return;
+    }
+    update();
+    draw();
+  }
+
+  function update() {
+    const head = { x: snake[0].x + velocity.x, y: snake[0].y + velocity.y };
+
+    if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+      gameOver = true;
+      return;
+    }
+
+    for (let i = 1; i < snake.length; i++) {
+      if (snake[i].x === head.x && snake[i].y === head.y) {
+        gameOver = true;
+        return;
+      }
+    }
+
+    snake.unshift(head);
+
+    if (head.x === apple.x && head.y === apple.y) {
+      score++;
+      document.getElementById('score').innerText = 'Score: ' + score;
+      placeApple();
+    } else {
+      snake.pop();
+    }
+  }
+
+  function placeApple() {
+    let newApplePosition;
+    while (true) {
+      newApplePosition = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount),
+      };
+      let collision = snake.some(segment => segment.x === newApplePosition.x && segment.y === newApplePosition.y);
+      if (!collision) break;
+    }
+    apple = newApplePosition;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    bgGradient.addColorStop(0, '#00c6ff');
+    bgGradient.addColorStop(1, '#0072ff');
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let segment of snake) {
+      let x = segment.x * gridSize;
+      let y = segment.y * gridSize;
+
+      let snakeGradient = ctx.createLinearGradient(x, y, x + gridSize, y + gridSize);
+      snakeGradient.addColorStop(0, '#004d00');
+      snakeGradient.addColorStop(1, '#006600');
+
+      ctx.fillStyle = snakeGradient;
+      ctx.fillRect(x + 1, y + 1, gridSize - 2, gridSize - 2);
+    }
+
+    let appleX = apple.x * gridSize;
+    let appleY = apple.y * gridSize;
+
+    let appleGradient = ctx.createRadialGradient(
+      appleX + gridSize / 2, appleY + gridSize / 2, 2,
+      appleX + gridSize / 2, appleY + gridSize / 2, gridSize / 2
+    );
+    appleGradient.addColorStop(0, '#ff512f');
+    appleGradient.addColorStop(1, '#dd2476');
+
+    ctx.fillStyle = appleGradient;
+    ctx.beginPath();
+    ctx.arc(appleX + gridSize / 2, appleY + gridSize / 2, gridSize / 2 - 2, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  document.addEventListener('keydown', keyDown);
+
+  function keyDown(e) {
+    switch (e.keyCode) {
+      case 37:
+        if (velocity.x !== 1) velocity = { x: -1, y: 0 };
+        break;
+      case 38:
+        if (velocity.y !== 1) velocity = { x: 0, y: -1 };
+        break;
+      case 39:
+        if (velocity.x !== -1) velocity = { x: 1, y: 0 };
+        break;
+      case 40:
+        if (velocity.y !== -1) velocity = { x: 0, y: 1 };
+        break;
+    }
+  }
+
+  function startGame() {
+    gameOver = false;
+    snake = [{ x: 10, y: 10 }];
+    velocity = { x: 0, y: 0 };
+    score = 0;
+    document.getElementById('score').innerText = 'Score: ' + score;
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('restart-button').style.display = 'none';
+    placeApple();
+    if (gameInterval) clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 150);
+  }
+
+  function restartGame() {
+    startGame();
+  }
+
+  startGame();
+</script>
+</body>
+</html>

@@ -64,11 +64,27 @@ Test your memory and match pairs of cosmic-themed cards before the timer runs ou
 
 ---
 
+### 5. Snake Game
+
+Guide the snake to eat food and grow, but avoid hitting the walls or running into yourself. This classic game is simple but addictive, with a retro-style design and fun animations.
+
+#### **Features**:
+
+- **Classic Gameplay**: Navigate the snake to eat apples, grow longer, and avoid collisions.
+- **Dynamic Background**: Colorful gradient background changes dynamically during the game.
+- **Score Tracking**: Tracks your current score to see how far you can go.
+- **Responsive Design**: Optimized for both desktop and mobile devices, ensuring smooth gameplay everywhere.
+- **Game Over & Restart Options**: Clear game over messages and a restart button to keep the fun going.
+
+[👉 Play the Snake Game](https://aerobit.github.io/HTML_Games/snake.html)
+
+---
+
 ## 🚀 Upcoming Games
 
 Our collection is still growing! We have more games in the pipeline, including:
 
-- **Snake Game**: Guide the snake to eat food and grow, but avoid hitting the walls or yourself.
+- **More Challenging Puzzle Games**: Stay tuned for additional games that will test your skills and provide hours of entertainment.
 
 Each game will be listed here as soon as it's ready. Stay tuned!
 
